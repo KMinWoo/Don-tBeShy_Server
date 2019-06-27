@@ -11,9 +11,7 @@ app.use(bodyParser.urlencoded({extended:false}))// post methd 데이터를 가�
 
 
 app.get('/', (req, res) => res.send('Hello World!'));
-app.get('/contraceptivemeasure', (req, res) => {
-    res.send("asd");
-});
+
 app.get('/contraceptivemeasure', (req, res) => res.send('ssss!'));
 
 
