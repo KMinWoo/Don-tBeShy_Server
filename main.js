@@ -1,29 +1,26 @@
-const axios = require("axios");
-const cheerio = require("cheerio");
-const log = console.log;
+const express = require('express');
+const app = express();
+const bodyParser =require('body-parser');
+const port = 3000;
 
-const getHtml = async () => {
-  try {
-    return await axios.get("https://www.evecondoms.com/product/list.html?cate_no=30");
-  } catch (error) {
-    console.error(error);
-  }
-};
+app.locals.pretty = true;
+app.use(express.static('public'));
+app.set('view engine', 'jade');
+app.set('views', './views');// defalut
+app.use(bodyParser.urlencoded({extended:false}))// post methd 데이터를 가져오기 위한 set 
 
-getHtml().then(html => {
-    let ulList = [];
-    const $ = cheerio.load(html.data);
-    const $bodyList = $("prdList grid3").children("xans-record-");
-    $bodyList.each(function(i, elem) {
-      ulList[i] = {
-          title: $(this).find('span.titledisplaynone span').text(),
-        //   url: $(this).find('strong.news-tl a').attr('href'),
-        //   image_url: $(this).find('p.poto a img').attr('src'),
-        //   image_alt: $(this).find('p.poto a img').attr('alt'),
-        //   summary: $(this).find('p.lead').text().slice(0, -11),
-        //   date: $(this).find('span.p-time').text()
-      };
-    });
-    const data = ulList.filter(n => n.title);
-    return data;
-}).then(res => log(res));
+
+app.get('/', (req, res) => res.send('Hello World!'));
+app.get('/contraceptivemeasure', (req, res) => {
+    res.send("asd");
+});
+app.get('/contraceptivemeasure', (req, res) => res.send('ssss!'));
+
+
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}!`);
+});
+
+var db = require('./database.js');
+db.db_connection();
+db.getCondom();
