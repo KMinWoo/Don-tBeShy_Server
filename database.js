@@ -14,7 +14,10 @@ database.sql = [
   `insert into client(id, password, brithday, gender, couplenumber) values(?,?,?,false,0)`,
   `insert into client(id, password, brithday, gender, couplenumber) values(?,?,?,true,0)`,
   `select id from client where id = ?`,
-  `select coupleinfo.first as id_1, coupleinfo.second as id_2, couplestate.first, couplestate.second from coupleinfo join couplestate on coupleinfo.number = couplestate.number where coupleinfo.first = ? || coupleinfo.second=?`
+  `select coupleinfo.first as id_1, coupleinfo.second as id_2, couplestate.first, couplestate.second, coupleinfo.first_physiology,coupleinfo.first_sex,coupleinfo.second_physiology,coupleinfo.second_sex from coupleinfo join couplestate on coupleinfo.number = couplestate.number where coupleinfo.first = ? || coupleinfo.second=?`,
+  `update cs set state = ? where id = ?`,
+  `select * from cs where number = (select couplenumber from client where client.id = ?)`,
+  `update cs set state = 3 where number = (select couplenumber from client where client.id = ?)`,
 ];
 
 database.db_connection = function () {
@@ -53,12 +56,12 @@ database.getBtn = function (type, params, res) {
   this.connection.query(this.sql[type], params, function (err, rows, fields) {
     if (!err) {
       var json = new Object();
-      if(rows[0].second == 1 && rows[0].first == 1) json.state = 2;
-      else json.state = rows[0].id_1 === params[0] ? rows[0].second : rows[0].id_2 === params[0] ? rows[0].first : 0;
+      json.state = rows[0].id === params[0] ? rows[1].state == 1 ? 2 : rows[0].state : rows[0].state == 1 ? 2 : rows[1].state;
       res.send(json);
     } else console.log('Error while performing Query.', err);
   });
 };
+
 
 
 database.insertInfo = function (type, params) {
@@ -68,6 +71,16 @@ database.insertInfo = function (type, params) {
     }
   });
 };
+
+database.update = function (type, params) {
+
+    this.connection.query(this.sql[type], params, function (err, rows, fields) {
+      if (err) {
+        console.log('Error while performing Query.', err); 
+      }
+    });
+  };
+  
 
 database.end = function () {
   this.connection.end();

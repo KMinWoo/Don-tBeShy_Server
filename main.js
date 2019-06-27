@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
+var http = require('http').Server(app);
 const bodyParser =require('body-parser');
 const port = 3000;
+var io = require('socket.io')(http);
 const fs = require('fs');
 var db = require('./database.js');
 app.locals.pretty = true;
@@ -9,6 +11,22 @@ app.use(express.static('public'));
 app.set('view engine', 'jade');
 app.set('views', './views');// defalut
 app.use(bodyParser.urlencoded({extended:false}))// post methd 데이터를 가져오기 위한 set 
+
+
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/index.html');
+});
+app.get('/asd', function(req, res){
+    res.sendFile(__dirname + '/index.html');
+  });
+  
+// io.on('connection', function(socket){
+//   socket.on('chat message', function(msg){
+//     io.emit('chat message', msg);
+//     console.log('connection');
+//   });
+// });
+
 
 
 app.get('/id', (req, res)=>{
@@ -39,9 +57,9 @@ app.get('/calendar', (req, res)=>{
     var nextDate ='';
     if(month == 12)
     {
-        nextDate = (year) + '-01';
-        year++;
         date = year + '-' + month;
+        year++;
+        nextDate = (year) + '-01';
     }else {
         if(month < 10){
             date = year + '-0' + month;
@@ -55,11 +73,17 @@ app.get('/calendar', (req, res)=>{
             nextDate = year + '-' + month;
         }
     }
+    console.log(nextDate, date);
     db.getInfo(0, [id, date, nextDate], res);
 });
 
+app.get('/abbreviation',(req, res)=>{
+    var physiology = req.query.physiology;
+    var sex = req.query.sex;
 
-app.get('/btn', (req, res)=>{
+});
+
+app.get('/btn',(req, res)=>{
     var id = req.query.id;
     db.getBtn(4, [id, id], res);
 });
@@ -76,6 +100,7 @@ app.get('/button', (req, res)=>{
 
 
 db.db_connection();
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}!`);
+app.listen(3000, function(){
+    console.log('listening on *:3000');
 });
+  
