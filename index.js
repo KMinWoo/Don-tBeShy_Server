@@ -60,6 +60,16 @@ app.get('/calendar', (req, res) => {
     db.getInfo(0, [id, date, nextDate], res);
 });
 
+app.get('/addcalendar', (req, res) => {
+    var id = req.query.id;
+    var type = req.query.type;
+    var date = req.query.year+'-'+req.query.month + '-' + req.query.day;
+    
+    console.log("날짜 기록추가", date);
+    db.insertInfo(8, [date, type]);
+    res.send("success");
+});
+
 app.get('/abbreviation', (req, res) => {
     var physiology = req.query.physiology;
     var sex = req.query.sex;
@@ -85,7 +95,7 @@ app.get('/btnclick', (req, res) => {
     else{
         db.update(5, [state, id]);
     }
-    res.send("asd");
+    res.send("success");
 });
 
 

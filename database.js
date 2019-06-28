@@ -18,6 +18,7 @@ database.sql = [
   `update cs set state = ? where id = ?`,
   `select * from cs where number = (select couplenumber from client where client.id = ?)`,
   `update cs set state = 3 where number = (select couplenumber from client where client.id = ?)`,
+  `insert into coupledate(number, time, state) values(1,?,?)`
 ];
 
 database.db_connection = function () {
@@ -47,6 +48,7 @@ database.getInfo = function (type, params, res) {
         json.state = rows[i].state;
         arr.push(json)
       }
+      console.log(arr);
       res.send(arr);
     } else console.log('Error while performing Query.', err);
   });
