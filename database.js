@@ -59,6 +59,7 @@ database.getBtn = function (type, params, res) {
     if (!err) {
       var json = new Object();
       json.state = rows[0].id === params[0] ? rows[1].state == 1 ? 2 : rows[0].state : rows[0].state == 1 ? 2 : rows[1].state;
+      console.log(json, rows[0].id, rows[0].state,rows[1].id, rows[1].state);
       res.send(json);
     } else console.log('Error while performing Query.', err);
   });

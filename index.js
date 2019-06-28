@@ -15,6 +15,7 @@ app.get('/', function(req, res) {
 app.get('/id', (req, res) => {
     var id = req.query.id;
     db.idCheck(3, id, res);
+    res.send("success");
 });
 
 
@@ -25,12 +26,13 @@ app.get('/register', (req, res) => {
     var brithdate = req.query.brithdate;
     var gender = req.query.gender;
     db.insertInfo(gender == 1 ? 1 : 2, [id, password, brithdate]);
+    res.send("success");
 });
 
 app.get('/couple', (req, res) => {
     var id = req.query.id;
     var partner = req.query.partner;
-
+    res.send("success");
 });
 
 
@@ -73,12 +75,15 @@ app.get('/addcalendar', (req, res) => {
 app.get('/abbreviation', (req, res) => {
     var physiology = req.query.physiology;
     var sex = req.query.sex;
-
+    res.send("success");
 });
 
 app.get('/btn', (req, res) => {
-    var id = req.query.id;
-    db.getBtn(6, [id], res);
+
+  var id = req.query.id;
+  console.log('state ref', id)
+
+  db.getBtn(6, [id], res);
 });
 
 app.get('/btnclick', (req, res) => {
